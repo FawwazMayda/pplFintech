@@ -15,5 +15,7 @@ let fintechSchema = new mongoose.Schema({
 })
 
 let fintech = mongoose.model('fintech',fintechSchema,'fintech')
-
+fintech.create({
+    id:"ABANG",balance:25000
+})
 module.exports = fintech
