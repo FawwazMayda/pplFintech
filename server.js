@@ -1,5 +1,5 @@
 const http = require('http')
-//const app = require('./app')
+const app = require('./app')
 let port = 80
 let server = http.createServer(app)
 
