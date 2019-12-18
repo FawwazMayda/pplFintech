@@ -28,5 +28,36 @@ router.get('/topup/:id/:amount',(req,res)=>{
     })
 })
 
+router.get('/transfer/:senderID/:receiverID/:amount',(req,res)=>{
+    let senderID = req.params['senderID']
+    let receiverID = req.params['receiverID']
+    let amount = parseInt(req.params['amount'])
+    fintech.findOne({_id:senderID},(err1,d1)=>{
+        if(err1) res.status(500).send("Internal server error")
+        if(d1!=null){
+            fintech.findOne({_id:receiverID},(err2,d2)=>{
+                if(err2) res.status(500).send("Internal server error")
+                if(d2!=null){
+                    let tempD1 = d1.balance - amount
+                    let tempD2 = d2.balance + amount
+                    if(tempD1 < 0){
+                        res.status(401).send(`Amount of transfer cause SenderID ${senderID} below 0. Rejected`)
+                    } else {
+                        d1.balance = tempD1
+                        d2.balance = tempD2
+                        d1.save()
+                        d2.save()
+                        res.status(200).send(`SenderID ${senderID} send ${amount} to ReceiverID ${receiverID}`)
+                    }
+                } else {
+                    res.status(404).send(`Receiver ID ${receiverID} not found`)
+                }
+            })
+        } else {
+            res.status(404).send(`Sender ID ${senderID} not found`)
+        }
+    })
+})
+
 module.exports = router
 
