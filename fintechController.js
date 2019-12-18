@@ -14,7 +14,6 @@ router.get('/create/:id',(req,res)=>{
             res.status(500).send({msg:"User already exits",data:d})
         }
     })
-
 })
 
 module.exports = router
